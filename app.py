@@ -2,13 +2,11 @@ import streamlit as st
 from datetime import date, time, datetime
 import json
 import os
-import hashlib
+# import hashlib # SUPPRIMÉ
 import gspread  # NOUVEL IMPORT
 import pandas as pd  # NOUVEL IMPORT
 
 # --- Configuration et Initialisation ---
-
-# La constante DB_FILE n'est plus nécessaire
 
 st.set_page_config(
     page_title="Gestionnaire d'Événements et Rappels",
@@ -31,11 +29,12 @@ except KeyError:
     st.stop()
 
 
+# --- Configuration de l'Authentification SANS HACHAGE ---
 
-
+# Ancien : HARDCODED_USERNAME = "Groupe Emmanuel"
+# Ancien : HARDCODED_PASSWORD_HASH = hash_password("RCC123")
 HARDCODED_USERNAME = "Groupe Emmanuel"
-HARDCODED_PASSWORD ="RCC2025"
-
+HARDCODED_PASSWORD = "RCC2025" # Mot de passe en CLAIR
 
 # --- FONCTIONS DE CONNEXION GOOGLE SHEETS ---
 
@@ -204,11 +203,12 @@ def filter_and_cleanup_annonces():
     return active_annonces, expired_count
 
 
-# --- Fonction de Connexion ---
+# --- Fonction de Connexion (CORRIGÉE) ---
 def check_login(username, password):
     """Vérifie les identifiants de l'utilisateur."""
-    input_hash = hash_password(password)
-    if username == HARDCODED_USERNAME and input_hash == HARDCODED_PASSWORD:
+    # ANCIEN : input_hash = hash_password(password)
+    # Comparaison directe SANS HASHAGE
+    if username == HARDCODED_USERNAME and password == HARDCODED_PASSWORD:
         st.session_state.logged_in = True
         st.experimental_rerun()
     else:
