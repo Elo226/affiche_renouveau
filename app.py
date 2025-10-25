@@ -31,15 +31,10 @@ except KeyError:
     st.stop()
 
 
-# --- Configuration de l'Authentification ---
-
-def hash_password(password):
-    """Retourne le hachage SHA256 d'un mot de passe."""
-    return hashlib.sha256(password.encode()).hexdigest()
 
 
 HARDCODED_USERNAME = "Groupe Emmanuel"
-HARDCODED_PASSWORD_HASH = hash_password("RCC2025")
+HARDCODED_PASSWORD ="RCC2025"
 
 
 # --- FONCTIONS DE CONNEXION GOOGLE SHEETS ---
@@ -213,8 +208,9 @@ def filter_and_cleanup_annonces():
 def check_login(username, password):
     """Vérifie les identifiants de l'utilisateur."""
     input_hash = hash_password(password)
-    if username == HARDCODED_USERNAME and input_hash == HARDCODED_PASSWORD_HASH:
+    if username == HARDCODED_USERNAME and input_hash == HARDCODED_PASSWORD:
         st.session_state.logged_in = True
+        st.experimental_rerun()
     else:
         st.error("Nom d'utilisateur ou mot de passe incorrect.")
 
