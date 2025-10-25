@@ -39,7 +39,7 @@ def hash_password(password):
 
 
 HARDCODED_USERNAME = "Groupe Emmanuel"
-HARDCODED_PASSWORD_HASH = hash_password("RCC123")
+HARDCODED_PASSWORD_HASH = hash_password("RCC2025")
 
 
 # --- FONCTIONS DE CONNEXION GOOGLE SHEETS ---
