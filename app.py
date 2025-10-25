@@ -206,19 +206,11 @@ def filter_and_cleanup_annonces():
 # --- Fonction de Connexion (CORRIGÉE) ---
 def check_login(username, password):
     """Vérifie les identifiants de l'utilisateur."""
-    # ----------------------------------------------------
-    # AJOUTER LES LIGNES DE DEBUG CI-DESSOUS
-    # ----------------------------------------------------
-    print("--- TENTATIVE DE CONNEXION ---")
-    print(f"Reçu Username (longueur {len(username)}): '{username}'")
-    print(f"Reçu Password (longueur {len(password)}): '{password}'")
-    print(f"Attendu Username (longueur {len(HARDCODED_USERNAME)}): '{HARDCODED_USERNAME}'")
-    print(f"Attendu Password (longueur {len(HARDCODED_PASSWORD)}): '{HARDCODED_PASSWORD}'")
-    # ----------------------------------------------------
     if username == HARDCODED_USERNAME and password == HARDCODED_PASSWORD:
         st.session_state.logged_in = True
     else:
         st.error("Nom d'utilisateur ou mot de passe incorrect.")
+        st.error(username,password)
 
 
 # Fonction de déconnexion
