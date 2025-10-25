@@ -210,7 +210,6 @@ def check_login(username, password):
     # Comparaison directe SANS HASHAGE
     if username == HARDCODED_USERNAME and password == HARDCODED_PASSWORD:
         st.session_state.logged_in = True
-        st.experimental_rerun()
     else:
         st.error("Nom d'utilisateur ou mot de passe incorrect.")
 
