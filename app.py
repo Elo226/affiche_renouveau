@@ -29,12 +29,8 @@ except KeyError:
     st.stop()
 
 
-# --- Configuration de l'Authentification SANS HACHAGE ---
-
-# Ancien : HARDCODED_USERNAME = "Groupe Emmanuel"
-# Ancien : HARDCODED_PASSWORD_HASH = hash_password("RCC123")
 HARDCODED_USERNAME = "Groupe Emmanuel"
-HARDCODED_PASSWORD = "RCC2025" # Mot de passe en CLAIR
+HARDCODED_PASSWORD = "RCC2025" 
 
 # --- FONCTIONS DE CONNEXION GOOGLE SHEETS ---
 
@@ -209,7 +205,7 @@ def check_login(username, password):
     if username == HARDCODED_USERNAME and password == HARDCODED_PASSWORD:
         st.session_state.logged_in = True
     else:
-        st.error(f"Nom d'utilisateur ou mot de passe incorrect {username},{password}.")
+        st.error(f"Nom d'utilisateur ou mot de passe incorrect")
    
 
 # Fonction de déconnexion
