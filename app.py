@@ -1,3 +1,4 @@
+
 import streamlit as st
 from datetime import date, time, datetime
 import json
@@ -30,7 +31,7 @@ except KeyError:
 
 
 HARDCODED_USERNAME = "Groupe Emmanuel"
-HARDCODED_PASSWORD = "RCC2025" 
+HARDCODED_PASSWORD = "RCC2025"
 
 # --- FONCTIONS DE CONNEXION GOOGLE SHEETS ---
 
@@ -154,6 +155,31 @@ def add_annonce_ponctuel(paroisse, evenement_titre, evenement_description, date_
         f"Événement ponctuel **'{evenement_titre}'** pour **'{paroisse}'** enregistré pour le {date_evenement} à {heure_evenement}.")
 
 
+def delete_expired_from_sheet(expired_annonces):
+    """Supprime les événements expirés du Google Sheet."""
+    ws = get_worksheet()
+    if not ws:
+        return
+    
+    try:
+        all_rows = ws.get_all_records(head=1, empty2zero=False)
+        rows_to_delete = []
+        
+        for i, row in enumerate(all_rows):
+            for expired in expired_annonces:
+                if (row.get('evenement_titre') == expired.get('evenement_titre') and
+                    row.get('paroisse') == expired.get('paroisse') and
+                    row.get('created_at') == expired.get('created_at')):
+                    rows_to_delete.append(i + 2)  # +2 car header=ligne 1, et index commence à 0
+        
+        # Suppression en ordre inverse pour ne pas décaler les indices
+        for row_index in sorted(rows_to_delete, reverse=True):
+            ws.delete_rows(row_index)
+            
+    except Exception as e:
+        st.error(f"Erreur lors de la suppression dans Google Sheets: {e}")
+
+
 def filter_and_cleanup_annonces():
     """
     Filtre les annonces actives et met à jour la session state UNIQUEMENT.
@@ -193,10 +219,11 @@ def filter_and_cleanup_annonces():
 
     # Mise à jour de la session state (nettoyage local/affiché)
     if expired_count > 0:
+        expired_annonces = [a for a in st.session_state.annonces if a not in active_annonces]
+        delete_expired_from_sheet(expired_annonces)  
         st.session_state.annonces = active_annonces
-        # L'appel à save_annonces (sauvegarde distante) est bien retiré.
 
-    return active_annonces, expired_count
+    return active_annonces, expired_count 
 
 
 # --- Fonction de Connexion (CORRIGÉE) ---
@@ -206,7 +233,7 @@ def check_login(username, password):
         st.session_state.logged_in = True
     else:
         st.error(f"Nom d'utilisateur ou mot de passe incorrect")
-   
+
 
 # Fonction de déconnexion
 def logout():
@@ -406,10 +433,6 @@ else:
 
         # 1. Filtrage et Nettoyage
         active_annonces, expired_count = filter_and_cleanup_annonces()
-
-        if expired_count > 0:
-            st.info(
-                f"🗑️ **{expired_count}** événement(s) passé(s) ont été automatiquement nettoyé(s) de votre vue locale. Ces entrées existent toujours dans Google Sheets.")
 
         # 2. Affichage
         if not active_annonces:
