@@ -261,7 +261,7 @@ def show_login_page():
             unsafe_allow_html=True
         )
 
-        with st.container(border=True):
+        with st.container():
             st.subheader("Authentification")
             with st.form("login_form"):
                 username = st.text_input("Nom d'utilisateur", key="username_input")
